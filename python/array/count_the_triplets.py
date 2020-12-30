@@ -18,18 +18,44 @@ def solve_efficient(array, verbose=0):
         start, end = 0, ith - 1
         while start < end:
             if array[start] + array[end] == i:
-                counts += 1
-                
+                # counts += 1
                 if verbose!=0:
                     print('-->', array[start], array[end], i)
+                
+                
+                if array[end] == array[start]:
+                    leng = end - start + 1
+                    counts += int(leng*(leng-1)/2)
+                    if verbose!=0: print(f'counts increment-{leng}: ', int(leng*(leng-1)/2))                    
+                    break
 
-                if array[end-1] == array[end]:
-                    end -= 1
-                else: start += 1    
+                left_continuous = 1
+                right_continuous = 1
+                end_start, start_start = end-1, start+1 
+                while array[end_start] == array[end]:
+                    end_start-=1
+                    right_continuous += 1
+                while array[start_start] == array[start]:
+                    start_start+=1
+                    left_continuous += 1
+                
+
+                counts += left_continuous * right_continuous
+
+                if verbose!=0: print('counts increment: ', left_continuous*right_continuous)
+
+                start, end = start_start, end_start               
+                
+                
+
+                # if array[end-1] == array[end]:
+                #     end -= 1
+                # else: start += 1    
                 # start += 1
                 
             elif array[start] + array[end] < i: start += 1
             else: end -= 1
+
     return counts 
         
 
@@ -38,20 +64,25 @@ def solve_efficient(array, verbose=0):
 
 if __name__ == "__main__":
     def prim_test():
-        array = [1, 5, 3, 2]
-        print(solve_efficient(array), 2)
+        # array = [1, 5, 3, 2]
+        # print(solve_efficient(array), 2)
     
-        array = [2, 3, 4]
-        print(solve_efficient(array), 0)
+        array = [85, 15, 17, 34, 46, 34, 17, 17, 48]
+        print(sorted(array))
+        print(solve_efficient(array, 0), 6)
 
-        array = [49, 52, 3, 3, 54]
-        print(solve_efficient(array, 1), 2)
+        # # array = [49, 52, 3, 3, 54]
+        # # print(solve_efficient(array, 1), 2)
+
+        # array = [104, 81, 74, 82, 5, 47, 23, 126, 44, 53, 64, 44, 40, 55]
+        # print(sorted(array))
+        # print(solve_efficient(array, 1), 4)
     
     # prim_test()
 
     import random
-    MAX_LENGTH = 20
-    MAX_N = 100
+    MAX_LENGTH = 100
+    MAX_N = 1000
     TRUE_PROB = 0.3
 
     
@@ -94,7 +125,7 @@ if __name__ == "__main__":
 
     def brute_test():
         # get n examples
-        NUM_EXAMPLES = 100
+        NUM_EXAMPLES = 10000
         PRINT_NUM = 5
         import time
         from tqdm import tqdm 
@@ -164,8 +195,10 @@ if __name__ == "__main__":
 
 
 
-
-        
-
 # document
 # Given an array of distinct integers. The task is to count all the triplets such that sum of two elements equals the third element.
+
+# running test: 100%|████████████████████████████████████████████████| 10000/10000 [03:54<00:00, 42.62it/s]
+# first algo success_rate % 1.0 while for second algo it is % 1.0
+# first algo on avg took % 2723.7024784088135 mic-s wheras second took 146.70121669769287 mic-s
+# simulation_time 0.02057078354358673
