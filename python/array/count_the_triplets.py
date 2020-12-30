@@ -9,6 +9,7 @@ def solve(array, verbose=0):
                     counts += 1
 
     return counts 
+# time O(n^3)
 
 def solve_efficient(array, verbose=0):
     counts = 0
@@ -53,7 +54,7 @@ def solve_efficient(array, verbose=0):
         
 
 
-# time O(n^3)
+# time O(n^2)
 
 if __name__ == "__main__":
     def prim_test():
