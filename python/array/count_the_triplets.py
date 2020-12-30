@@ -26,7 +26,7 @@ def solve_efficient(array, verbose=0):
                 if array[end] == array[start]:
                     leng = end - start + 1
                     counts += int(leng*(leng-1)/2)
-                    if verbose!=0: print(f'counts increment-{leng}: ', int(leng*(leng-1)/2))                    
+                    if verbose!=0: print(f'counts increment-:', int(leng*(leng-1)/2))                    
                     break
 
                 left_continuous = 1
@@ -45,13 +45,6 @@ def solve_efficient(array, verbose=0):
                 if verbose!=0: print('counts increment: ', left_continuous*right_continuous)
 
                 start, end = start_start, end_start               
-                
-                
-
-                # if array[end-1] == array[end]:
-                #     end -= 1
-                # else: start += 1    
-                # start += 1
                 
             elif array[start] + array[end] < i: start += 1
             else: end -= 1
