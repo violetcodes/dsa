@@ -84,5 +84,3 @@ prim_test()
 # 
 # Output:
 # For each testcase, in a new line, print the starting and ending positions(1 indexing) of first such occuring subarray from the left if sum equals to subarray, else print -1.
-
-
