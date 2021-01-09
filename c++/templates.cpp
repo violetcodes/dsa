@@ -98,13 +98,14 @@ int main() {
     // std::cout << icont.inc() << std::endl;
     // std::cout << ccont.uppercase() << std::endl;
 
-    ArrayContainer<int, 5> int_arr;
-    ArrayContainer<char, 6> char_arr;
+    // ArrayContainer<int, 5> int_arr;
+    // ArrayContainer<char, 6> char_arr;
 
-    int_arr.set(2, 5);
-    char_arr.set(3, 'y');
 
-    cout << "Int arr: " << int_arr << endl;
-    cout << "Char arr: " << char_arr << endl;            
+    // int_arr.set(2, 5);
+    // char_arr.set(3, 'y');
+
+    // cout << "Int arr: " << int_arr << endl;
+    // cout << "Char arr: " << char_arr << endl;            
 
 }
