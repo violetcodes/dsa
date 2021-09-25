@@ -1,6 +1,8 @@
 #include <iostream> 
 #include <string>
 #include <cmath>
+#include <set>
+
 using namespace std; 
 
 
@@ -53,15 +55,40 @@ class Container<string> {
 
 };
 
+
 int main() {
 
-    Container<string> c1 = Container<string>("hello, Vishal");
-    c1.print_it();
+    set<int> iset;
+    iset.insert(9);
+    iset.insert(10);
+    iset.insert(12);
+    iset.insert(13);
+    iset.insert(9);
 
-    Container<int> c2 = Container<int>(32);
-    c2.print_it();
+    set<int>::iterator it;
+    for (it = iset.begin(); it!=iset.end(); it++){
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    int search_for;
+    cin >> search_for;
     
-    // Point<int> p1 = Point<int>(3, 2);
+    it = iset.begin();
+    while (it != iset.end() & *it!=search_for) it++;
+    
+    if (it==iset.end()) cout << "sorry! not found" << endl;
+    else cout << "found it" << endl;
+    
+
+
+    // Container<string> c1 = Container<string>("hello, Vishal");
+    // c1.print_it();
+
+    // Container<int> c2 = Container<int>(32);
+    // c2.print_it();
+    
+    // Point<int> p1 = Point<int>(3, 2);s
     // cout << "X:" << p1.get_x() << " " << "Y:" << p1.get_y() << endl;
     // p1.get_xandy();
 
