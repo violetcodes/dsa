@@ -7,7 +7,6 @@ def polynomial_multiplication(x1_coef, x2_coef):
     for i, x1 in enumerate(x1_coef):
         for j, x2 in enumerate(x2_coef):
             x_res[i+j] += x1*x2
-
     return x_res
 
 def polynomial_multiplication1(x1_coef, x2_coef):
