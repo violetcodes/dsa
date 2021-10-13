@@ -39,11 +39,6 @@ def polynomial_multiplication1(x1_coef, x2_coef):
 
     return R
 
-
-
-
-
-
 if __name__ == '__main__':
 
     w = [3, 5, 6, 5, 6]
