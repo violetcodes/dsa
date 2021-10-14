@@ -38,3 +38,16 @@ if __name__ == '__main__':
     C = 15
 
     max_frac_value(w, v, C)
+
+
+def add_fn(a1, b1):
+    a2, b2 = (a1, b1) if len(a1) >= len(b1) else (b1, a1) 
+
+    added = [0] * len(a2)
+    for i, d in enumerate(a2):
+        added[i] += d 
+    
+    for i, d in enumerate(b2):
+        added[-(i+1)] += d 
+
+    return added

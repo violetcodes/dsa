@@ -67,5 +67,3 @@ if __name__ == '__main__':
     full_tank_cap = 400
     stops = [0, 200, 375, 475, 577, 776, 950, 976]
     car_refueling(stops, full_tank_cap)
-
-
