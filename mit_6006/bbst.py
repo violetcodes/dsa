@@ -215,6 +215,7 @@ class BSTNode:
         if right_node is not None: right_node.parent = node 
         return node 
 
+
     @staticmethod
     def inorder_t(node):
         if node is None:
