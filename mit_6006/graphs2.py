@@ -34,9 +34,9 @@ class Graph:
     def add_edge(self, edge):
         u, v = edge 
         self.add_node(u)
+        self.add_node(v)
         self.adj[u][v] = 1
         if not self.is_directed:
-            self.add_node(v)
             self.adj[v][u] = 1
     
     def neighbors_of(self, node):
@@ -44,16 +44,17 @@ class Graph:
             yield from self.adj[node]
         return []
     
-    @staticmethod
-    def build(edge_list, is_directed=False):
-        graph = Graph(is_directed=is_directed)
-        for u, v in edge_list:
-            graph.add_edge((u, v))
+    @classmethod
+    def build(cls, edge_list, is_directed=False):
+        graph = cls(is_directed=is_directed)
+        for e in edge_list:
+            graph.add_edge(e)
         return graph 
 
-    def _bfs(self, source):
+    def _bfs(self, source, parent_pointers=None):
         queue = [source, ]
-        parent_pointers = {source: None}
+        parent_pointers = parent_pointers or {}
+        parent_pointers[source] = None
         while queue:
             node = queue.pop(0)
             for ngh in self.neighbors_of(node):
@@ -76,29 +77,26 @@ class Graph:
 
     def full_dfs(self, ):
         parent_pointers = {}
-        orders = []
+        order = []
         for node in self.nodes():
             if node not in parent_pointers:
-                p_pointers, order = self._dfs(node)
-                parent_pointers.update(p_pointers)
-                orders.append(order)
+                parent_pointers, order = self._dfs(node, parent_pointers=parent_pointers, order=order)
         
-        return parent_pointers, orders 
+        return parent_pointers, order
 
     def full_bfs(self, ):
         parent_pointers = {}
-        
         for node in self.nodes():
             if node not in parent_pointers:
-                p_pointers = self._bfs(node)
-                parent_pointers.update(p_pointers)
+                parent_pointers = self._bfs(node, parent_pointers)
+                
         return parent_pointers
 
     def connected_components(self, ):
         parent_pointers = {}
         for node in self.nodes():
             if node not in parent_pointers:
-                p_pointers = self._dfs(node)
+                p_pointers, _ = self._dfs(node)
                 parent_pointers.update(p_pointers)
                 yield [p for p in p_pointers]
 
@@ -122,48 +120,77 @@ class Graph:
         
         return True
 
+    def get_cycle(self):
+        if not self.is_directed:
+            return False 
+        full_dfs_paths, _ = self.full_dfs()
+
+        def _ancestors(k, full_dfs_paths):
+            anc = []
+            while k in full_dfs_paths:
+                anc.append(full_dfs_paths[k])
+                k = full_dfs_paths[k]
+            return anc 
+        
+        
+        for n in self.nodes():
+            anc = _ancestors(n, full_dfs_paths)
+            for ngh in self.neighbors_of(n):
+                if ngh in anc:
+                    
+                    print(full_dfs_paths, ngh, n)
+                    cycle = []
+                    while n != ngh:
+                        cycle.append(n)
+                        n = full_dfs_paths[n]
+                    cycle.append(ngh)
+                    return cycle
 
     def topological_sorting(self, ):
         assert self.is_dag(), "not a dag"
         
         _, order = self.full_dfs()
-        for i in range(len(order)):
-            order[i] = order[i][::-1]
-
-        return order
+        return order[::-1]
+        
 
 def test():
 
-    # # general
-    # edge_list = [(1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 1), (6, 3), (6, 4), ]
-    # graph = Graph.build(edge_list=edge_list, is_directed=False)
-    # print('bfs', graph._bfs(1))
-    # print('dfs', graph._dfs(1))
+    # general
+    edge_list = [(1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 1), (6, 3), (6, 4), ]
+    graph = Graph.build(edge_list=edge_list, is_directed=False)
+    print('bfs', graph._bfs(1))
+    print('dfs', graph._dfs(1))
 
-    # # connected components
-    # edge_list = [
-    #     (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 1), 
-    #     (6, 3), (6, 4), (10, 12), (10, 11), (13, 14), (12, 14)]
-    # graph = Graph.build(edge_list=edge_list, is_directed=False)
-    # for cc in graph.connected_components():
-    #     print('cc:', cc)
+    # connected components
+    edge_list = [
+        (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 1), 
+        (6, 3), (6, 4), (10, 12), (10, 11), (13, 14), (12, 14)]
+    graph = Graph.build(edge_list=edge_list, is_directed=False)
+    for cc in graph.connected_components():
+        print('cc:', cc)
 
-    # print("full_dfs:", graph.full_dfs())
+    print("full_dfs:", graph.full_dfs())
 
-    # # topological sorting
-    # edge_list = [
-    #     (1, 2), (2, 3), (3, 4), (4, 5), (5, 7), (3, 6), (6, 8), (7, 8),
-    #     (8, 9), (9, 10) 
-    #     ]
-    # graph = Graph.build(edge_list=edge_list, is_directed=True)
-    # print(graph.topological_sorting())
+    # topological sorting
+    edge_list = [
+        (1, 2), (2, 3), (3, 4), (4, 5), (5, 7), (5, 6), (6, 3), (6, 8), (7, 8),
+        (8, 9), (9, 10) 
+        ]
+    graph = Graph.build(edge_list=edge_list, is_directed=True)
+    print('is dag', graph.is_dag())
+    print('cycle:', graph.get_cycle())
 
+
+    edge_list = [
+        (1, 2), (2, 3), (3, 4), (4, 5), (5, 7), (6, 3), (6, 8), (7, 8),
+        (8, 9), (9, 10) 
+        ]
+    graph = Graph.build(edge_list=edge_list, is_directed=True)
+    print('is dag', graph.is_dag())
+    print('cycle:', graph.get_cycle())
+    print(graph.topological_sorting())
 
     pass
-
-
-
-
 
 if __name__ == '__main__':
     test()
